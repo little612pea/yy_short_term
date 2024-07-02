@@ -93,7 +93,8 @@ class Model:
                                 for kw in range(kernel_width):
                                     if i+kh < input_height and j+kw < input_width:
                                         dx[b, ic, i+kh, j+kw] += dout[b, oc, i, j] * weights[oc, ic, kh, kw]
-                                    dweights[oc, ic, kh, kw] += dout[b, oc, i, j] * x[b, ic, i+kh, j+kw]
+                                        dweights[oc, ic, kh, kw] += dout[b, oc, i, j] * x[b, ic, i+kh, j+kw]
+                                    
         
         return dx, dweights, dbias
 

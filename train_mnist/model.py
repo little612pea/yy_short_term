@@ -68,27 +68,53 @@ def app():
             </div>
             '''
         )
-
         with gr.Row():
             # 手写数字识别输入鼠标绘制框SketchPad和输出的标签框
-            tab_sketchpad_input = gr.Tab(label="SketchPad Input")
-            with tab_sketchpad_input:
+            with gr.Column():
                 input_sketchpad = gr.Sketchpad(label='Draw here')
-        with gr.Row():
-            tab_label_output = gr.Tab(label="Label Output")
-            with tab_label_output:
+                predict_button = gr.Button("Predict")
                 output_label = gr.Label(label='Predicted Label')
-        input_sketchpad.change(
-            fn=predict_image,
+
+        # 按钮点击事件绑定
+        predict_button.click(
+            fn=button_click,
             inputs=input_sketchpad,
             outputs=output_label
         )
         app.launch(share=True)
 
 
-if __name__ == "__main__":
-    # 加载模型
-    model = torch.load('models/mnist.pth', map_location=torch.device('cpu'))
+def predict_image(sketch):
+    print("Function entered")  # 确认函数被调用
+    try:
+        # 预处理图像
+        image = Image.fromarray(sketch).convert("L")
+        print("Image opened")  # 确认图像被打开
+        image = image.resize((28, 28))  # 调整大小为28x28
+        print("Image resized")  # 确认图像大小调整
+        image = np.array(image)
+        image = image / 255.0  # 归一化
+        image = torch.tensor(image, dtype=torch.float32).unsqueeze(0).unsqueeze(0)  # 调整形状并转换为Tensor
+        print("Image processed")  # 确认图像预处理完成
+
+        # 使用模型进行预测
+        with torch.no_grad():
+            predictions = model(image.float())
+        print("Prediction made")  # 确认预测完成
+
+        return torch.argmax(predictions).item()
+    except Exception as e:
+        print(f"Error in predict_image: {e}")  # 输出错误信息
+        return None
+
+def button_click(sketch):
+    print("Button clicked")  # 确认按钮被点击   
+    predicted_label = predict_image(sketch)
+    return predicted_label
+
+if __name__ == '__main__':
+    model = Model()
+    model.load_state_dict(torch.load("./models/mnist.pkl",map_location=torch.device('cpu')))
     model.eval()
     app()
 

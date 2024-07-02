@@ -25,7 +25,7 @@ class Model:
         return dx
     
     def max_pool2d(self, x, size):
-        out_height = x.shape[2] // size
+        out_height = x.shape[2] // size  #//是整除符号
         out_width = x.shape[3] // size
         pooled = np.zeros((x.shape[0], x.shape[1], out_height, out_width))
         
@@ -91,10 +91,12 @@ class Model:
                         for ic in range(in_channels):
                             for kh in range(kernel_height):
                                 for kw in range(kernel_width):
-                                    dx[b, ic, i+kh, j+kw] += dout[b, oc, i, j] * weights[oc, ic, kh, kw]
+                                    if i+kh < input_height and j+kw < input_width:
+                                        dx[b, ic, i+kh, j+kw] += dout[b, oc, i, j] * weights[oc, ic, kh, kw]
                                     dweights[oc, ic, kh, kw] += dout[b, oc, i, j] * x[b, ic, i+kh, j+kw]
         
         return dx, dweights, dbias
+
 
     def linear(self, x, weights, bias):
         return np.dot(x, weights) + bias
@@ -207,7 +209,7 @@ class Model:
             
             # 更新参数
             self.update_params(grads, learning_rate)
-            
+
 # 示例数据 (使用随机数据作为示例)
 X = np.random.randn(10, 1, 28, 28)  # 10个样本，1个通道，28x28图像
 y = np.random.randn(10, 10)         # 10个样本，10个类别

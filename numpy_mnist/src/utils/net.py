@@ -1,4 +1,4 @@
-# math utils for myCNN
+# math utils for CNN
 
 import numpy as np
 

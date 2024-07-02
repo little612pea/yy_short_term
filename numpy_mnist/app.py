@@ -2,27 +2,23 @@ import src.mycnn as cnn
 import numpy as np
 import gradio as gr
 from PIL import Image
-import io
 
 
 def predict_image(sketch):
-    # 预处理图像
-    print("entered")
-    try:
-        image = Image.open(io.BytesIO(sketch)).convert("L")
-        image = image.convert("L")  # 转换为灰度图
-        image = image.resize((28, 28))  # 调整大小为28x28
-        image = np.array(image)
-        image = image / 255.0  # 归一化
-        model = cnn.MyCNN()
-        image = np.expand_dims(image, axis=0)
-        image = np.expand_dims(image, axis=0)
-        # 使用模型进行预测
-        predicted_label = model.forward(image)
-        return predicted_label
-    except Exception as e:
-        print(f"Error in predict_image: {e}")  # 输出错误信息
-        return None
+    # Decode base64 to bytes if necessary
+    image = Image.fromarray(sketch).convert("L")
+    print("image opened")
+    image = image.resize((28, 28))  # 调整大小为28x28
+    image = np.array(image)
+    image = image / 255.0  # 归一化
+    model = cnn.MyCNN()
+    image = np.expand_dims(image, axis=0)
+    image = np.expand_dims(image, axis=0)
+    # 使用模型进行预测
+    predicted_label = model.forward(image)
+    #返回最大值的索引：
+    predicted_label = np.argmax(predicted_label).item()
+    return predicted_label
 
 
 def button_click(sketch):

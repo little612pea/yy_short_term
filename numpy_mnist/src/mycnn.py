@@ -1,8 +1,7 @@
 # basic functions for CNN
 
 import numpy as np
-from utils import net as net
-
+import numpy_mnist.src.utils.net as net
 
 class MyCNN:
     def __init__(self):

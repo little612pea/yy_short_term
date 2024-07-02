@@ -1,4 +1,4 @@
-from numpy_mnist.src import mycnn as cnn
+import src.mycnn as cnn
 import numpy as np
 import gradio as gr
 from PIL import Image

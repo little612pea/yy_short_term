@@ -1,6 +1,4 @@
 torch
 numpy
-torchvision
-pandas
-matplotlib
+pillow
 gradio==3.36.1

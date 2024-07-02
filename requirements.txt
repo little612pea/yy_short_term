@@ -1,5 +1,6 @@
 torch
 numpy
+torchvision
 pandas
 matplotlib
 gradio==3.36.1

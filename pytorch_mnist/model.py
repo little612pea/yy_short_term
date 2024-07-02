@@ -7,6 +7,7 @@ import numpy as np
 from PIL import Image
 import io
 
+
 class Model(Module):
     def __init__(self):
         super(Model, self).__init__()
@@ -107,14 +108,16 @@ def predict_image(sketch):
         print(f"Error in predict_image: {e}")  # 输出错误信息
         return None
 
+
 def button_click(sketch):
     print("Button clicked")  # 确认按钮被点击   
     predicted_label = predict_image(sketch)
     return predicted_label
 
+
 if __name__ == '__main__':
     model = Model()
-    model.load_state_dict(torch.load("./models/mnist.pkl",map_location=torch.device('cpu')))
+    model.load_state_dict(torch.load("./models/mnist.pkl", map_location=torch.device('cpu')))
     model.eval()
     app()
 
